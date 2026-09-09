@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'node' // तुमच्या Jenkins मधील Node.js Global Tool चे नाव
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
