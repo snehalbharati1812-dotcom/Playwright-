@@ -18,9 +18,10 @@ pipeline {
 
         stage('Run Playwright Tests') {
     steps {
-        // tests/ फोल्डरमधील सर्व .spec.ts फाईल्स रन होतील
+        // 'tests/' फोल्डरमधील सर्व (UI + API) टेस्ट्स रन होतील
         bat 'npx playwright test --project=chromium'
     }
+
 }
         }
     }
