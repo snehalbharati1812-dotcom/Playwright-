@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'node' // तुमच्या Jenkins मधील Node.js Global Tool चे नाव
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -10,37 +14,36 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // System Node.js & npm वापरून dependencies इंस्टॉल करणे
                 bat 'npm install'
                 bat 'npx playwright install chromium'
             }
         }
 
-        stage('Run Playwright Tests') {
-    steps {
-        // 'tests/' फोल्डरमधील सर्व (UI + API) टेस्ट्स रन होतील
-        bat 'npx playwright test --project=chromium'
-    }
+        stage('Run Microservices API Tests') {
+            steps {
+                bat 'npx playwright test tests/microservices.spec.ts'
+            }
+        }
 
-}
+        stage('Run UI Automation Tests') {
+            steps {
+                bat 'npx playwright test tests/amazonself.spec.ts --project=chromium'
+            }
         }
     }
 
     post {
         always {
-            // जर रिपोर्ट जनरेट झाला असेल तरच तो अर्काइव्ह करणे
             script {
-                if (fileExists('playwright-report/index.html')) {
-                    publishHTML(target: [
-                        allowMissing: true,
+                if (fileExists('playwright-report')) {
+                    publishHTML([
+                        allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
                         reportDir: 'playwright-report',
                         reportFiles: 'index.html',
                         reportName: 'Playwright HTML Report'
                     ])
-                } else {
-                    echo 'Playwright report was not generated.'
                 }
             }
         }
