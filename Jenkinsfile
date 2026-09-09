@@ -17,9 +17,11 @@ pipeline {
         }
 
         stage('Run Playwright Tests') {
-            steps {
-                bat 'npx playwright test tests/amazonself.spec.ts --project=chromium'
-            }
+    steps {
+        // tests/ फोल्डरमधील सर्व .spec.ts फाईल्स रन होतील
+        bat 'npx playwright test --project=chromium'
+    }
+}
         }
     }
 
